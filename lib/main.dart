@@ -17,11 +17,15 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: "Entrance Test",
-      initialRoute: RouteName.login,
+      title: "VEC - Gilang",
+      initialRoute: RouteName.splash,
       getPages: AppRoute.pages,
       initialBinding: AppBinding(),
       debugShowCheckedModeBanner: false,
+      builder: (context, child) => Container(
+        color: Colors.white,
+        child: SafeArea(child: child!),
+      ),
     );
   }
 }
