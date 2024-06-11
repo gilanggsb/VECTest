@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:entrance_test/src/constants/local_data_key.dart';
+import 'package:vec_gilang/src/constants/local_data_key.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../constants/endpoint.dart';

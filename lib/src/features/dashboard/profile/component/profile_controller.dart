@@ -1,4 +1,4 @@
-import 'package:entrance_test/src/repositories/user_repository.dart';
+import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:get/get.dart';
 
 import '../../../../../app/routes/route_name.dart';
@@ -61,13 +61,9 @@ class ProfileController extends GetxController {
     await _userRepository.testUnauthenticated();
   }
 
-  onDownloadFileClick() async {
+  onDownloadFileClick() async {}
 
-  }
-
-  onOpenWebPageClick() {
-
-  }
+  onOpenWebPageClick() {}
 
   void doLogout() async {
     await _userRepository.logout();

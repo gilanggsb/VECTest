@@ -1,4 +1,4 @@
-import 'package:entrance_test/src/features/dashboard/component/dashboard_controller.dart';
+import 'package:vec_gilang/src/features/dashboard/component/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +12,7 @@ class DashboardPage extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-            () => IndexedStack(
+        () => IndexedStack(
             index: controller.selectedNavbar, children: controller.listPages),
       ),
       bottomNavigationBar: Theme(
@@ -21,7 +21,7 @@ class DashboardPage extends GetView<DashboardController> {
           highlightColor: Colors.transparent,
         ),
         child: Obx(
-              () => BottomNavigationBar(
+          () => BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 label: "Products",

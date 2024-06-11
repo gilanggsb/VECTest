@@ -1,7 +1,7 @@
-import 'package:entrance_test/app/routes/route_name.dart';
-import 'package:entrance_test/src/features/dashboard/component/dashboard_binding.dart';
-import 'package:entrance_test/src/features/dashboard/dashboard_page.dart';
-import 'package:entrance_test/src/features/dashboard/profile/edit/edit_profile_page.dart';
+import 'package:vec_gilang/app/routes/route_name.dart';
+import 'package:vec_gilang/src/features/dashboard/component/dashboard_binding.dart';
+import 'package:vec_gilang/src/features/dashboard/dashboard_page.dart';
+import 'package:vec_gilang/src/features/dashboard/profile/edit/edit_profile_page.dart';
 import 'package:get/get.dart';
 
 import '../../src/features/dashboard/profile/edit/component/edit_profile_binding.dart';

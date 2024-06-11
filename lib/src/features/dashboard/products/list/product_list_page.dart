@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
-import 'package:entrance_test/src/utils/number_ext.dart';
+import 'package:vec_gilang/src/utils/number_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -103,20 +103,19 @@ class ProductListPage extends GetWidget<ProductListController> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
-                            onTap: () => {controller.setFavorite(product)},
-                            child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Obx(
-                                    () => Image.asset(
-                                  product.isFavorite
-                                      ? ic_favorite_filled
-                                      : ic_favorite_empty,
-                                  width: 24,
-                                  height: 24,
+                              onTap: () => {controller.setFavorite(product)},
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Obx(
+                                  () => Image.asset(
+                                    product.isFavorite
+                                        ? ic_favorite_filled
+                                        : ic_favorite_empty,
+                                    width: 24,
+                                    height: 24,
+                                  ),
                                 ),
-                              ),
-                            )
-                          )
+                              ))
                         ],
                       ),
                     ],

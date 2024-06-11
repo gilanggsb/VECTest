@@ -1,4 +1,4 @@
-import 'package:entrance_test/src/repositories/user_repository.dart';
+import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

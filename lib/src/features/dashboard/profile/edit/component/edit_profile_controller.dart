@@ -1,5 +1,5 @@
-import 'package:entrance_test/src/repositories/user_repository.dart';
-import 'package:entrance_test/src/utils/string_ext.dart';
+import 'package:vec_gilang/src/repositories/user_repository.dart';
+import 'package:vec_gilang/src/utils/string_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -74,7 +74,8 @@ class EditProfileController extends GetxController {
 
         etBirthDate.text = '';
         if (localUser.dateOfBirth.isNullOrEmpty == false) {
-          birthDate = DateUtil.getDateFromShortServerFormat(localUser.dateOfBirth!);
+          birthDate =
+              DateUtil.getDateFromShortServerFormat(localUser.dateOfBirth!);
           etBirthDate.text = DateUtil.getBirthDate(birthDate);
         }
       } else {

@@ -1,5 +1,5 @@
-import 'package:entrance_test/app/routes/app_route.dart';
-import 'package:entrance_test/app/routes/route_name.dart';
+import 'package:vec_gilang/app/routes/app_route.dart';
+import 'package:vec_gilang/app/routes/route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';

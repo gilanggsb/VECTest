@@ -1,6 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="id.vesperia.challenge.gilang">
     <application
-        android:label="entrance_test"
+        android:label="VEC - Gilang"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
