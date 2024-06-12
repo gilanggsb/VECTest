@@ -3,6 +3,8 @@ import 'package:vec_gilang/src/features/dashboard/component/dashboard_binding.da
 import 'package:vec_gilang/src/features/dashboard/dashboard_page.dart';
 import 'package:vec_gilang/src/features/dashboard/profile/edit/edit_profile_page.dart';
 import 'package:get/get.dart';
+import 'package:vec_gilang/src/features/dashboard/webview/component/webview_binding.dart';
+import 'package:vec_gilang/src/features/dashboard/webview/webview_page.dart';
 import 'package:vec_gilang/src/features/splash/splash_page.dart';
 
 import '../../src/features/dashboard/profile/edit/component/edit_profile_binding.dart';
@@ -31,6 +33,11 @@ class AppRoute {
       name: RouteName.editProfile,
       page: () => const EditProfilePage(),
       binding: EditProfileBinding(),
+    ),
+    GetPage(
+      name: RouteName.webView,
+      page: () => const WebviewPage(),
+      binding: WebviewBinding(),
     ),
   ];
 }

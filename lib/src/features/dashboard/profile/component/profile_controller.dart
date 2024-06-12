@@ -1,5 +1,6 @@
 import 'package:vec_gilang/src/constants/endpoint.dart';
 import 'package:vec_gilang/src/models/models.dart';
+import 'package:vec_gilang/src/models/webview_params_model.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:get/get.dart';
 import 'package:vec_gilang/src/utils/helper_service.dart';
@@ -92,7 +93,13 @@ class ProfileController extends GetxController {
     }
   }
 
-  onOpenWebPageClick() {}
+  onOpenWebPageClick() {
+    Get.toNamed(
+      RouteName.webView,
+      arguments:
+          WebviewParamsModel(webviewUrl: Endpoint.webviewUrl, title: 'Flutter'),
+    );
+  }
 
   void doLogout() async {
     try {

@@ -6,4 +6,5 @@ class Endpoint {
   static const getProductList = '/product';
   static const flutterTutorialPdf =
       'https://www.tutorialspoint.com/flutter/flutter_tutorial.pdf';
+  static const webviewUrl = 'https://www.youtube.com/watch?v=lpnKWK-KEYs';
 }

@@ -23,14 +23,14 @@ class LoginController extends GetxController {
   void doLogin() async {
     try {
       isLoading.value = true;
-      if (!isFormValid()) {
-        return;
-      }
+      // if (!isFormValid()) {
+      //   return;
+      // }
 
-      if (etPhone.text != '85173254399' || etPassword.text != '12345678') {
-        SnackbarWidget.showFailedSnackbar('Email atau password salah');
-        return;
-      }
+      // if (etPhone.text != '85173254399' || etPassword.text != '12345678') {
+      //   SnackbarWidget.showFailedSnackbar('Email atau password salah');
+      //   return;
+      // }
       await _userRepository.login();
       Get.offAllNamed(RouteName.dashboard);
     } finally {

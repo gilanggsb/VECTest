@@ -44,6 +44,7 @@ class ProfilePage extends GetView<ProfileController> {
                                   height: 48,
                                   imageUrl: controller.profilePictureUrl,
                                   fit: BoxFit.cover,
+                                  errorListener: (data) {},
                                   progressIndicatorBuilder:
                                       (context, url, downloadProgress) =>
                                           CircularProgressIndicator(
