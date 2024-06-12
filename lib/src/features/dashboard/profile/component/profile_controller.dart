@@ -24,6 +24,8 @@ class ProfileController extends GetxController {
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
 
+  RxBool isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -66,7 +68,13 @@ class ProfileController extends GetxController {
   onOpenWebPageClick() {}
 
   void doLogout() async {
-    await _userRepository.logout();
-    Get.offAllNamed(RouteName.login);
+    try {
+      isLoading.value = true;
+      await Future.delayed(const Duration(seconds: 1));
+      await _userRepository.logout();
+      Get.offAllNamed(RouteName.login);
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

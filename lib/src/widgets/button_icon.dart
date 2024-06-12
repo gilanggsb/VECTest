@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/color.dart';
+
 class ButtonIcon extends StatelessWidget {
   const ButtonIcon({
     Key? key,
@@ -12,6 +14,7 @@ class ButtonIcon extends StatelessWidget {
     required this.onClick,
     required this.textLabel,
     this.side,
+    this.isLoading = false,
   }) : super(key: key);
 
   final Color? buttonColor;
@@ -23,20 +26,21 @@ class ButtonIcon extends StatelessWidget {
   final Function onClick;
   final String textLabel;
   final BorderSide? side;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: buttonColor,
+        backgroundColor: isLoading ? gray500 : buttonColor,
         shape: borderColor != null
             ? RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(width: 1.5, color: borderColor!),
-        )
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(width: 1.5, color: borderColor!),
+              )
             : RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+                borderRadius: BorderRadius.circular(8),
+              ),
         splashFactory: NoSplash.splashFactory,
         elevation: 0,
         side: side,
@@ -46,21 +50,27 @@ class ButtonIcon extends StatelessWidget {
       },
       icon: (iconSource != null)
           ? Image.asset(
-        iconSource ?? "",
-        height: iconSize ?? 24,
-        width: iconSize ?? 24,
-      )
+              iconSource ?? "",
+              height: iconSize ?? 24,
+              width: iconSize ?? 24,
+            )
           : icon != null
-          ? Icon(icon, size: iconSize ?? 24)
-          : const SizedBox.shrink(),
-      label: Text(
-        textLabel,
-        style: TextStyle(
-          fontSize: 14,
-          color: textColor,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+              ? Icon(icon, size: iconSize ?? 24)
+              : const SizedBox.shrink(),
+      label: isLoading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(),
+            )
+          : Text(
+              textLabel,
+              style: TextStyle(
+                fontSize: 14,
+                color: textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
     );
   }
 }
