@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vec_gilang/src/constants/local_data_key.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:vec_gilang/src/models/models.dart';
 
 import '../constants/endpoint.dart';
-import '../models/response/user_response_model.dart';
 import '../utils/networking_util.dart';
 
 class UserRepository {
@@ -56,6 +60,69 @@ class UserRepository {
       await _local.write(LocalDataKey.token, realToken);
     } on DioException catch (_) {
       rethrow;
+    }
+  }
+
+  Future<Response> downloadFile(
+    DownloadFileModel downloadFile,
+  ) async {
+    try {
+      String path = await _getFilePath(downloadFile.fileNameWithExt);
+      final Response response = await _client.download(
+        downloadFile.fullFileUrl,
+        path,
+        onReceiveProgress: (receivedBytes, totalBytes) {
+          if (totalBytes <= 0) return;
+          final percentage =
+              (receivedBytes / totalBytes * 100).toStringAsFixed(0);
+          final progress = receivedBytes / totalBytes;
+          final DownloadProgressModel downloadProgress = DownloadProgressModel(
+            percentage: percentage,
+            progress: progress,
+            receivedBytes: receivedBytes,
+            totalBytes: totalBytes,
+          );
+          downloadFile.downloadProgress(downloadProgress);
+        },
+      );
+      return response;
+    } on DioException catch (e) {
+      return parseError(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> _getFilePath(String filename) async {
+    Directory? dir;
+    try {
+      if (Platform.isIOS) {
+        dir = await getApplicationDocumentsDirectory(); // for iOS
+        return "${dir.path}/$filename";
+      }
+      dir = Directory('/storage/emulated/0/Download/'); // for android
+      if (!await dir.exists()) dir = (await getExternalStorageDirectory())!;
+      return "${dir.path}$filename";
+    } catch (err) {
+      debugPrint("Cannot get download folder path $err");
+    }
+    return '';
+  }
+
+  dynamic parseError(DioException e) {
+    if (e.type == DioExceptionType.badResponse) {
+      throw 'Bad Response';
+    }
+    if (e.type == DioExceptionType.connectionTimeout) {
+      throw 'check your connection';
+    }
+
+    if (e.type == DioExceptionType.receiveTimeout) {
+      throw 'unable to connect to the server';
+    }
+
+    if (e.type == DioExceptionType.unknown) {
+      throw 'Something went wrong';
     }
   }
 }

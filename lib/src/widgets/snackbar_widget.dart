@@ -52,4 +52,41 @@ class SnackbarWidget {
       icon: Image.asset(ic_failed_round, width: 24, height: 24),
     ));
   }
+
+  static void showProgressSnackbar(
+    String title,
+  ) {
+    final ProgressController controller = Get.put(ProgressController());
+    Get.snackbar(
+      title,
+      '',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.black54,
+      colorText: Colors.white,
+      messageText: Obx(
+        () => Column(
+          children: [
+            const Text(
+              'Please wait...',
+              style: TextStyle(color: Colors.white),
+            ),
+            const SizedBox(height: 10),
+            LinearProgressIndicator(
+              value: controller.progress.value,
+              backgroundColor: Colors.white,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProgressController extends GetxController {
+  var progress = 0.0.obs;
+
+  void updateProgress(double value) {
+    progress.value = value;
+  }
 }

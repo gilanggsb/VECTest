@@ -1,5 +1,8 @@
+import 'package:vec_gilang/src/constants/endpoint.dart';
+import 'package:vec_gilang/src/models/models.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:get/get.dart';
+import 'package:vec_gilang/src/utils/helper_service.dart';
 
 import '../../../../../app/routes/route_name.dart';
 import '../../../../utils/networking_util.dart';
@@ -63,7 +66,31 @@ class ProfileController extends GetxController {
     await _userRepository.testUnauthenticated();
   }
 
-  onDownloadFileClick() async {}
+  onDownloadFileClick() async {
+    try {
+      final isGranted = await HelperService.getStoragePermission();
+      if (!isGranted) {
+        throw 'Permission denied';
+      }
+      SnackbarWidget.showProgressSnackbar('Downloading File');
+      DownloadFileModel downloadFile = DownloadFileModel(
+        fullFileUrl: Endpoint.flutterTutorialPdf,
+        fileNameWithExt: 'flutter_tutorial.pdf',
+        downloadProgress: (downloadProgress) {
+          final ProgressController controller = Get.find<ProgressController>();
+          controller.updateProgress(downloadProgress.progress!);
+        },
+      );
+
+      await _userRepository.downloadFile(downloadFile);
+      Get.closeCurrentSnackbar();
+      SnackbarWidget.showSuccessSnackbar('File Downloaded');
+    } on String catch (e) {
+      SnackbarWidget.showFailedSnackbar(e);
+    } catch (e) {
+      SnackbarWidget.showFailedSnackbar(e.toString());
+    }
+  }
 
   onOpenWebPageClick() {}
 

@@ -22,10 +22,6 @@ class MainApp extends StatelessWidget {
       getPages: AppRoute.pages,
       initialBinding: AppBinding(),
       debugShowCheckedModeBanner: false,
-      builder: (context, child) => Container(
-        color: Colors.white,
-        child: SafeArea(child: child!),
-      ),
     );
   }
 }
