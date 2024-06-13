@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../models/product_model.dart';
@@ -16,6 +19,7 @@ class ProductListController extends GetxController {
   final _products = Rx<List<ProductModel>>([]);
 
   List<ProductModel> get products => _products.value;
+  final ScrollController scrollController = ScrollController();
 
   final _isLoadingRetrieveProduct = false.obs;
 
@@ -36,7 +40,7 @@ class ProductListController extends GetxController {
   final _isLastPageProduct = false.obs;
 
   //The number of product retrieved each time a call is made to server
-  final _limit = 10;
+  final _limit = 8;
 
   //The number which shows how many product already loaded to the device,
   //thus giving the command to ignore the first x number of data when retrieving
@@ -46,6 +50,19 @@ class ProductListController extends GetxController {
   void onInit() {
     super.onInit();
     getProducts();
+    initScrollController();
+  }
+
+  void initScrollController() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+              scrollController.position.maxScrollExtent &&
+          !isLoadingRetrieveMoreProduct &&
+          !_isLastPageProduct.value) {
+        log("get other products");
+        getMoreProducts();
+      }
+    });
   }
 
   //first load or after refresh.
@@ -73,7 +90,19 @@ class ProductListController extends GetxController {
 
     _isLoadingRetrieveMoreProduct.value = true;
 
-    //TODO: finish this function by calling get product list with appropriate parameters
+    try {
+      final productList =
+          await _productRepository.getProductList(ProductListRequestModel(
+        limit: _limit,
+        skip: _skip,
+      ));
+      _products.value = [..._products.value, ...productList.data];
+      _products.refresh();
+      _isLastPageProduct.value = productList.data.length < _limit;
+      _skip = products.length;
+    } catch (error) {
+      SnackbarWidget.showFailedSnackbar(NetworkingUtil.errorMessage(error));
+    }
 
     _isLoadingRetrieveMoreProduct.value = false;
   }

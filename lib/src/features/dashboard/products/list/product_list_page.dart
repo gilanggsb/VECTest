@@ -17,33 +17,31 @@ class ProductListPage extends GetWidget<ProductListController> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
           backgroundColor: white,
-          body: Expanded(
-            child: RefreshIndicator(
-              onRefresh: () {
-                return Future.delayed(const Duration(seconds: 0), () {
-                  controller.getProducts();
-                });
-              },
-              child: Obx(
-                () => (controller.isLoadingRetrieveProduct)
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(primary),
-                      ))
-                    : (controller.products.isEmpty)
-                        ? Stack(
-                            children: [
-                              ListView(),
-                              const Center(
-                                child: EmptyListStateWidget(
-                                  iconSource: ic_empty_data,
-                                  text: "No product to show",
-                                ),
+          body: RefreshIndicator(
+            onRefresh: () {
+              return Future.delayed(const Duration(seconds: 0), () {
+                controller.getProducts();
+              });
+            },
+            child: Obx(
+              () => (controller.isLoadingRetrieveProduct)
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(primary),
+                    ))
+                  : (controller.products.isEmpty)
+                      ? Stack(
+                          children: [
+                            ListView(),
+                            const Center(
+                              child: EmptyListStateWidget(
+                                iconSource: ic_empty_data,
+                                text: "No product to show",
                               ),
-                            ],
-                          )
-                        : buildProductList(context),
-              ),
+                            ),
+                          ],
+                        )
+                      : buildProductList(context),
             ),
           ),
         ),
@@ -55,6 +53,7 @@ class ProductListPage extends GetWidget<ProductListController> {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       shrinkWrap: true,
+      controller: controller.scrollController,
       itemCount: controller.products.length,
       builder: (context, index) {
         final product = controller.products[index];
