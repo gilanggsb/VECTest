@@ -105,7 +105,7 @@ class ProductListPage extends GetWidget<ProductListController> {
                           InkWell(
                               onTap: () => {controller.setFavorite(product)},
                               child: Padding(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 child: Obx(
                                   () => Image.asset(
                                     product.isFavorite

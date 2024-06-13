@@ -26,7 +26,7 @@ class ProductRepository {
             'Bearer ${_local.read(LocalDataKey.token)}'),
       );
       return ProductListResponseModel.fromJson(responseJson.data);
-    } on DioError catch (_) {
+    } on DioException catch (_) {
       rethrow;
     }
   }

@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:vec_gilang/src/constants/local_data_key.dart';
 
 import '../../../../app/routes/route_name.dart';
 
 class SplashController extends GetxController {
+  final GetStorage _storage = Get.find<GetStorage>();
   SplashController();
 
   @override
@@ -11,9 +14,10 @@ class SplashController extends GetxController {
     checkUser();
   }
 
-  void checkUser() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.toNamed(RouteName.login);
-    });
+  void checkUser() async {
+    await Future.delayed(const Duration(seconds: 3));
+    String? token = _storage.read(LocalDataKey.token);
+    if (token == null) return Get.offNamed(RouteName.login);
+    Get.offNamed(RouteName.dashboard);
   }
 }

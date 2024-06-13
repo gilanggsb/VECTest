@@ -1,10 +1,13 @@
+import 'dart:developer';
+
+import 'package:vec_gilang/src/models/models.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:vec_gilang/src/utils/app_utils.dart';
+import 'package:vec_gilang/src/widgets/snackbar_widget.dart';
 
 import '../../../../app/routes/route_name.dart';
-import '../../../widgets/snackbar_widget.dart';
 
 class LoginController extends GetxController {
   final UserRepository _userRepository;
@@ -31,8 +34,16 @@ class LoginController extends GetxController {
       //   SnackbarWidget.showFailedSnackbar('Email atau password salah');
       //   return;
       // }
-      await _userRepository.login();
+      LoginModel login = LoginModel(
+        countryCode: "62",
+        password: etPassword.text,
+        phoneNumber: etPhone.text,
+      );
+      await _userRepository.login(login);
       Get.offAllNamed(RouteName.dashboard);
+    } catch (e) {
+      log("doLogin error : ${e.toString()}");
+      SnackbarWidget.showFailedSnackbar(e.toString());
     } finally {
       isLoading.value = false;
     }

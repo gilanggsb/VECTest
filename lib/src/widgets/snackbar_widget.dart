@@ -57,12 +57,8 @@ class SnackbarWidget {
     String title,
   ) {
     final ProgressController controller = Get.put(ProgressController());
-    Get.snackbar(
-      title,
-      '',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black54,
-      colorText: Colors.white,
+    Get.showSnackbar(GetSnackBar(
+      title: title,
       messageText: Obx(
         () => Column(
           children: [
@@ -79,7 +75,10 @@ class SnackbarWidget {
           ],
         ),
       ),
-    );
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.black54,
+      // colorText: Colors.white,
+    ));
   }
 }
 

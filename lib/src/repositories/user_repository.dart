@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:get/get.dart' as getx;
 import 'package:vec_gilang/src/constants/local_data_key.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vec_gilang/src/models/models.dart';
+import 'package:vec_gilang/src/utils/api_service.dart';
 
 import '../constants/endpoint.dart';
 import '../utils/networking_util.dart';
@@ -13,23 +13,59 @@ import '../utils/networking_util.dart';
 class UserRepository {
   final Dio _client;
   final GetStorage _local;
+  final ApiService _apiService = getx.Get.find<ApiService>();
 
-  UserRepository({required Dio client, required GetStorage local})
-      : _client = client,
+  UserRepository({
+    required Dio client,
+    required GetStorage local,
+  })  : _client = client,
         _local = local;
 
-  Future<void> login() async {
+  Future<void> login(
+    LoginModel login,
+  ) async {
     //Artificial delay to simulate logging in process
-    await Future.delayed(const Duration(seconds: 2));
+    // await Future.delayed(const Duration(seconds: 2));
     //Placeholder token. DO NOT call real logout API using this token
-    _local.write(
-        LocalDataKey.token, "621|DBiUBMfsEtX01tbdu4duNRCNMTt7PV5blr6zxTvq");
+    // _local.write(
+    //     LocalDataKey.token, "621|DBiUBMfsEtX01tbdu4duNRCNMTt7PV5blr6zxTvq");
+    try {
+      BaseResponse<LoginResponse> response =
+          await _apiService.post<LoginResponse>(
+        Endpoint.postSignIn,
+        body: login.toJson(),
+        fromJsonT: (json) => LoginResponse.fromJson(
+          json as Map<String, dynamic>,
+        ),
+      );
+
+      log("cek token login ${response.data?.token}");
+
+      _local.write(
+        LocalDataKey.token,
+        response.data?.token,
+      );
+    } on BadResponse catch (e) {
+      throw e.message ?? '';
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> logout() async {
     //Artificial delay to simulate logging out process
-    await Future.delayed(const Duration(seconds: 2));
-    await _local.remove(LocalDataKey.token);
+    // await Future.delayed(const Duration(seconds: 2));
+    try {
+      await _apiService.post<List>(
+        Endpoint.postSignOut,
+        fromJsonT: (json) => json,
+      );
+      await _local.remove(LocalDataKey.token);
+    } on BadResponse catch (e) {
+      throw e.message ?? '';
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<UserResponseModel> getUser() async {
@@ -67,62 +103,9 @@ class UserRepository {
     DownloadFileModel downloadFile,
   ) async {
     try {
-      String path = await _getFilePath(downloadFile.fileNameWithExt);
-      final Response response = await _client.download(
-        downloadFile.fullFileUrl,
-        path,
-        onReceiveProgress: (receivedBytes, totalBytes) {
-          if (totalBytes <= 0) return;
-          final percentage =
-              (receivedBytes / totalBytes * 100).toStringAsFixed(0);
-          final progress = receivedBytes / totalBytes;
-          final DownloadProgressModel downloadProgress = DownloadProgressModel(
-            percentage: percentage,
-            progress: progress,
-            receivedBytes: receivedBytes,
-            totalBytes: totalBytes,
-          );
-          downloadFile.downloadProgress(downloadProgress);
-        },
-      );
-      return response;
-    } on DioException catch (e) {
-      return parseError(e);
+      return await _apiService.downloadFile(downloadFile);
     } catch (e) {
       rethrow;
-    }
-  }
-
-  Future<String> _getFilePath(String filename) async {
-    Directory? dir;
-    try {
-      if (Platform.isIOS) {
-        dir = await getApplicationDocumentsDirectory(); // for iOS
-        return "${dir.path}/$filename";
-      }
-      dir = Directory('/storage/emulated/0/Download/'); // for android
-      if (!await dir.exists()) dir = (await getExternalStorageDirectory())!;
-      return "${dir.path}$filename";
-    } catch (err) {
-      debugPrint("Cannot get download folder path $err");
-    }
-    return '';
-  }
-
-  dynamic parseError(DioException e) {
-    if (e.type == DioExceptionType.badResponse) {
-      throw 'Bad Response';
-    }
-    if (e.type == DioExceptionType.connectionTimeout) {
-      throw 'check your connection';
-    }
-
-    if (e.type == DioExceptionType.receiveTimeout) {
-      throw 'unable to connect to the server';
-    }
-
-    if (e.type == DioExceptionType.unknown) {
-      throw 'Something went wrong';
     }
   }
 }

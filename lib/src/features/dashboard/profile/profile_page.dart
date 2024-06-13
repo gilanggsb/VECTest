@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/color.dart';
 import '../../../constants/icon.dart';
@@ -169,7 +168,17 @@ class ProfilePage extends GetView<ProfileController> {
               textLabel: "Sign Out",
               isLoading: controller.isLoading.value,
               onClick: () {
-                controller.doLogout();
+                Get.defaultDialog(
+                  title: "Logout",
+                  textCancel: "Close",
+                  textConfirm: "Confirm",
+                  middleText: "Are you sure want to logout?",
+                  onCancel: Get.back,
+                  onConfirm: () {
+                    Get.back();
+                    controller.doLogout();
+                  },
+                );
               },
             ),
           ),
