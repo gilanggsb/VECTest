@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
 
+typedef FromJsonT<T> = T Function(dynamic);
+
 class ApiService {
   final Dio _client;
 
@@ -18,7 +20,7 @@ class ApiService {
     String endpoints, {
     Map<String, dynamic>? body,
     Options? options,
-    required T Function(dynamic) fromJsonT,
+    required FromJsonT<T> fromJsonT,
   }) async {
     try {
       final Response response = await _client.post(
@@ -38,7 +40,7 @@ class ApiService {
     String endpoints, {
     Map<String, dynamic>? queryParams,
     Options? options,
-    required T Function(dynamic) fromJsonT,
+    required FromJsonT<T> fromJsonT,
   }) async {
     try {
       final Response response = await _client.get(endpoints,
@@ -81,6 +83,26 @@ class ApiService {
     }
   }
 
+  Future<BaseResponse<T>> uploadFormData<T>(
+    String endpoints, {
+    required FormData formData,
+    required FromJsonT<T> fromJsonT,
+    Options? options,
+  }) async {
+    try {
+      final Response response = await _client.post(
+        endpoints,
+        options: options?.copyWith(contentType: 'multipart/form-data'),
+        data: formData,
+      );
+      return parseResponse(response, fromJsonT);
+    } on DioException catch (e) {
+      return parseError(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String> _getFilePath(String filename) async {
     Directory? dir;
     try {
@@ -97,8 +119,7 @@ class ApiService {
     return '';
   }
 
-  BaseResponse<T> parseResponse<T>(
-      Response response, T Function(dynamic) fromJsonT) {
+  BaseResponse<T> parseResponse<T>(Response response, FromJsonT<T> fromJsonT) {
     try {
       final BaseResponse<T> baseResponse =
           BaseResponse.fromJson(response.data, fromJsonT);

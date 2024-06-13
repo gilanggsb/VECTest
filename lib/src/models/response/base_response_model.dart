@@ -1,3 +1,5 @@
+import 'package:vec_gilang/src/utils/api_service.dart';
+
 import '../models.dart';
 
 class BaseResponse<T> {
@@ -14,7 +16,7 @@ class BaseResponse<T> {
   });
 
   factory BaseResponse.fromJson(
-          Map<String, dynamic> json, T Function(dynamic json) fromJsonT) =>
+          Map<String, dynamic> json, FromJsonT<T> fromJsonT) =>
       BaseResponse(
         status: json["status"],
         message: json["message"],

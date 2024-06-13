@@ -5,9 +5,11 @@ import 'package:get/get.dart' as getx;
 import 'package:vec_gilang/src/constants/local_data_key.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vec_gilang/src/models/models.dart';
+import 'package:vec_gilang/src/models/request/update_profile_request_model.dart';
 import 'package:vec_gilang/src/utils/api_service.dart';
 
 import '../constants/endpoint.dart';
+import '../utils/app_utils.dart';
 import '../utils/networking_util.dart';
 
 class UserRepository {
@@ -104,6 +106,23 @@ class UserRepository {
   ) async {
     try {
       return await _apiService.downloadFile(downloadFile);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateProfile(UpdateProfileRequestModel model) async {
+    try {
+      final formData = await AppUtils.createFormData(model.toMap());
+      final response = await _apiService.uploadFormData(
+        Endpoint.postUpdateProfile,
+        formData: formData,
+        fromJsonT: (json) => UserModel.fromJson(json),
+      );
+      return response.data;
+    } on BadResponse catch (e) {
+      log("cekk user ${e.toJson()}");
+      throw e.message ?? '';
     } catch (e) {
       rethrow;
     }

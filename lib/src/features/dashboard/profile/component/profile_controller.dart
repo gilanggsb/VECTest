@@ -42,9 +42,11 @@ class ProfileController extends GetxController {
         final localUser = response.data;
 
         _name.value = localUser.name;
-        _phone.value = localUser.countryCode.isNotEmpty
-            ? "+${localUser.countryCode}${localUser.phone}"
-            : "";
+        _phone.value = localUser.countryCode == null
+            ? ""
+            : localUser.countryCode!.isNotEmpty
+                ? "+${localUser.countryCode}${localUser.phone}"
+                : "";
         _profilePictureUrl.value = localUser.profilePicture ?? '';
       } else {
         SnackbarWidget.showFailedSnackbar(response.message);

@@ -1,8 +1,13 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:vec_gilang/src/models/request/update_profile_request_model.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:vec_gilang/src/utils/string_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../../utils/app_utils.dart';
 import '../../../../../utils/date_util.dart';
 import '../../../../../utils/networking_util.dart';
 import '../../../../../widgets/snackbar_widget.dart';
@@ -20,6 +25,7 @@ class EditProfileController extends GetxController {
   final etHeight = TextEditingController();
   final etWeight = TextEditingController();
   final etBirthDate = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   final _countryCode = "".obs;
 
@@ -43,6 +49,9 @@ class EditProfileController extends GetxController {
 
   DateTime birthDate = DateTime.now();
 
+  Rx<File>? _profilePicture;
+  RxBool isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -60,7 +69,7 @@ class EditProfileController extends GetxController {
         etHeight.text = localUser.height?.toString() ?? '';
         etWeight.text = localUser.weight?.toString() ?? '';
 
-        _countryCode.value = localUser.countryCode;
+        _countryCode.value = localUser.countryCode ?? '';
 
         _profilePictureUrlOrPath.value = localUser.profilePicture ?? '';
         _isLoadPictureFromPath.value = false;
@@ -106,6 +115,46 @@ class EditProfileController extends GetxController {
   }
 
   void saveData() async {
-    //TODO: Implement edit user API
+    try {
+      if (!(formKey.currentState?.validate() ?? false)) {
+        return SnackbarWidget.showFailedSnackbar("Please fill out the form");
+      }
+
+      final updatedUser = UpdateProfileRequestModel(
+        dateOfBirth: DateUtil.getShortServerFormatDateString(birthDate),
+        email: etEmail.text,
+        name: etFullName.text,
+        gender: _gender.value,
+        height: etHeight.text,
+        weight: etWeight.text,
+        method: "PUT",
+        profilePicture: _profilePicture?.value,
+      );
+
+      await _userRepository.updateProfile(updatedUser);
+      SnackbarWidget.showSuccessSnackbar("Update Profile Success");
+      loadUserFromServer();
+    } catch (e) {
+      log("saveData error : ${e.toString()}");
+      SnackbarWidget.showFailedSnackbar(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  String? validateNumber(String? value, String fieldName) {
+    if (value == null || value.isEmpty) {
+      return '$fieldName should not be empty';
+    }
+
+    if (!AppUtils.isNumeric(value)) {
+      return '$fieldName should be a number';
+    }
+
+    if (int.parse(value) <= 0) {
+      return '$fieldName not less than 0';
+    }
+
+    return null;
   }
 }
