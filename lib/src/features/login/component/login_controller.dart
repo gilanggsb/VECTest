@@ -20,6 +20,7 @@ class LoginController extends GetxController {
   final etPassword = TextEditingController();
   RxBool isLoading = false.obs;
   RxBool visiblePassword = true.obs;
+  RxString phoneCode = '62'.obs;
   var errorPasswordMessage = ''.obs;
   var errorPhoneMessage = ''.obs;
 
@@ -35,7 +36,7 @@ class LoginController extends GetxController {
         return;
       }
       LoginModel login = LoginModel(
-        countryCode: "62",
+        countryCode: phoneCode.value,
         password: etPassword.text,
         phoneNumber: etPhone.text,
       );

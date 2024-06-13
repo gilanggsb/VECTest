@@ -1,3 +1,6 @@
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -110,22 +113,34 @@ class LoginPage extends GetView<LoginController> {
                         fillColor: white,
                         filled: true,
                         hintText: 'Phone Number',
-                        prefixIcon: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(width: 6),
-                              Text(
-                                '+62',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: gray900),
+                              const SizedBox(width: 6),
+                              InkWell(
+                                onTap: () {
+                                  _openCupertinoCountryPicker(
+                                    initialCountryPhoneCode:
+                                        controller.phoneCode.value,
+                                    onValuePicked: (data) {
+                                      controller.phoneCode.value =
+                                          data.phoneCode;
+                                    },
+                                  );
+                                },
+                                child: Text(
+                                  '+${controller.phoneCode}',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: gray900),
+                                ),
                               ),
-                              SizedBox(width: 12),
-                              SizedBox(
+                              const SizedBox(width: 12),
+                              const SizedBox(
                                 width: 1.5,
                                 height: 48,
                                 child: DecoratedBox(
@@ -237,21 +252,40 @@ class LoginPage extends GetView<LoginController> {
   }
 
   Widget loginButton() => SizedBox(
-      height: 52,
-      width: double.infinity,
-      child: SizedBox(
         height: 52,
         width: double.infinity,
-        child: Obx(
-          () => ButtonIcon(
-            isLoading: controller.isLoading.value,
-            buttonColor: primary,
-            textColor: white,
-            textLabel: "Sign In",
-            onClick: () {
-              controller.doLogin();
-            },
+        child: SizedBox(
+          height: 52,
+          width: double.infinity,
+          child: Obx(
+            () => ButtonIcon(
+              isLoading: controller.isLoading.value,
+              buttonColor: primary,
+              textColor: white,
+              textLabel: "Sign In",
+              onClick: () => controller.doLogin(),
+            ),
           ),
         ),
-      ));
+      );
 }
+
+void _openCupertinoCountryPicker(
+        {required String initialCountryPhoneCode,
+        required Function(Country) onValuePicked}) =>
+    showCupertinoModalPopup<void>(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return CountryPickerCupertino(
+          pickerSheetHeight: 150.0,
+          onValuePicked: onValuePicked,
+          initialCountry:
+              CountryPickerUtils.getCountryByPhoneCode(initialCountryPhoneCode),
+          itemFilter: (c) => ['AR', 'DE', 'GB', 'CN'].contains(c.isoCode),
+          priorityList: [
+            CountryPickerUtils.getCountryByIsoCode('ID'),
+            CountryPickerUtils.getCountryByIsoCode('US'),
+          ],
+        );
+      },
+    );
