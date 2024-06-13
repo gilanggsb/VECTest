@@ -91,7 +91,7 @@ class UserRepository {
       final realToken = _local.read<String?>(LocalDataKey.token);
       await _local.write(
           LocalDataKey.token, '619|kM5YBY5yM15KEuSmSMaEzlfv0lWs83r4cp4oty2T');
-      getUser();
+      await getUser();
       //401 not caught as exception
       await _local.write(LocalDataKey.token, realToken);
     } on DioException catch (_) {

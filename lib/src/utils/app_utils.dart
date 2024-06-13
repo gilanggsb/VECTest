@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:vec_gilang/src/constants/endpoint.dart';
 import 'package:vec_gilang/src/widgets/snackbar_widget.dart';
 
 class AppUtils {
@@ -8,4 +9,8 @@ class AppUtils {
       SnackbarWidget.showNeutralSnackbar(successMessage);
     });
   }
+
+  static List<String> whiteListApi = [
+    Endpoint.postSignIn,
+  ];
 }
