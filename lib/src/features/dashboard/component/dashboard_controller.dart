@@ -1,3 +1,4 @@
+import 'package:vec_gilang/src/features/dashboard/products/list/favorite_product_list_page.dart';
 import 'package:vec_gilang/src/features/dashboard/products/list/product_list_page.dart';
 import 'package:vec_gilang/src/features/dashboard/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class DashboardController extends GetxController {
     super.onInit();
     _listPages.value = [
       const ProductListPage(),
+      const FavoriteProductListPage(),
       const ProfilePage(),
     ];
   }

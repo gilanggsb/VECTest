@@ -17,13 +17,20 @@ class ProductListController extends GetxController {
   }) : _productRepository = productRepository;
 
   final _products = Rx<List<ProductModel>>([]);
+  final _favoriteProducts = Rx<List<ProductModel>>([]);
 
   List<ProductModel> get products => _products.value;
+  List<ProductModel> get favoriteProducts => _favoriteProducts.value;
   final ScrollController scrollController = ScrollController();
 
   final _isLoadingRetrieveProduct = false.obs;
 
   bool get isLoadingRetrieveProduct => _isLoadingRetrieveProduct.value;
+
+  final _isLoadingRetrieveFavoriteProduct = false.obs;
+
+  bool get isLoadingRetrieveFavoriteProduct =>
+      _isLoadingRetrieveFavoriteProduct.value;
 
   final _isLoadingRetrieveMoreProduct = false.obs;
 
@@ -49,8 +56,13 @@ class ProductListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getProducts();
+    initProduct();
     initScrollController();
+  }
+
+  void initProduct() {
+    getProducts();
+    getFavoriteProducts();
   }
 
   void initScrollController() {
@@ -59,7 +71,6 @@ class ProductListController extends GetxController {
               scrollController.position.maxScrollExtent &&
           !isLoadingRetrieveMoreProduct &&
           !_isLastPageProduct.value) {
-        log("get other products");
         getMoreProducts();
       }
     });
@@ -114,5 +125,18 @@ class ProductListController extends GetxController {
   void setFavorite(ProductModel product) async {
     product.isFavorite = !product.isFavorite;
     await _productRepository.saveOrRemoveProductFromFavorite(product);
+    getFavoriteProducts();
+  }
+
+  void removeFavorite(ProductModel product) async {
+    await _productRepository.saveOrRemoveProductFromFavorite(product);
+    initProduct();
+  }
+
+  void getFavoriteProducts() async {
+    _isLoadingRetrieveFavoriteProduct.value = true;
+    final favProducts = await _productRepository.getFavoriteProducts();
+    _favoriteProducts.value = favProducts;
+    _isLoadingRetrieveFavoriteProduct.value = false;
   }
 }
