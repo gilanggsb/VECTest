@@ -12,7 +12,7 @@ import '../src/utils/curl_logger_interceptors.dart';
 class AppBinding extends Bindings {
   @override
   void dependencies() async {
-    Get.put<GetStorage>(GetStorage());
+    Get.put<GetStorage>(GetStorage(), permanent: true);
 
     Get.put<Dio>(
       Dio(
@@ -26,19 +26,6 @@ class AppBinding extends Bindings {
           CustomInterceptors(),
           CurlLoggerDioInterceptor(),
           PrettyDioLogger(),
-          // TalkerDioLogger(
-          //   settings: TalkerDioLoggerSettings(
-          //     printRequestHeaders: true,
-          //     printResponseHeaders: true,
-          //     printResponseMessage: true,
-          //     // Blue http requests logs in console
-          //     requestPen: AnsiPen()..blue(),
-          //     // Green http responses logs in console
-          //     responsePen: AnsiPen()..green(),
-          //     // Error http logs in console
-          //     errorPen: AnsiPen()..red(),
-          //   ),
-          // ),
         ]),
       permanent: true,
     );
@@ -47,12 +34,12 @@ class AppBinding extends Bindings {
       ApiService(
         client: Get.find<Dio>(),
       ),
+      permanent: true,
     );
 
-    await Get.putAsync(() async {
-      final isarService = IsarService();
-      await isarService.init(IsarService.isarSchemas);
-      return isarService;
-    });
+    Get.put<IsarService>(
+      IsarService()..init(IsarService.isarSchemas),
+      permanent: true,
+    );
   }
 }

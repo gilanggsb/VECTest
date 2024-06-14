@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:vec_gilang/src/features/dashboard/component/dashboard_controller.dart';
 import 'package:vec_gilang/src/features/dashboard/products/list/component/product_list_controller.dart';
-import 'package:vec_gilang/src/models/product_model.dart';
 import 'package:vec_gilang/src/repositories/product_repository.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:get/get.dart';

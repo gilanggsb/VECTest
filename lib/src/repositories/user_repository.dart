@@ -5,8 +5,8 @@ import 'package:get/get.dart' as getx;
 import 'package:vec_gilang/src/constants/local_data_key.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vec_gilang/src/models/models.dart';
-import 'package:vec_gilang/src/models/request/update_profile_request_model.dart';
 import 'package:vec_gilang/src/utils/api_service.dart';
+import 'package:vec_gilang/src/utils/isar_service.dart';
 
 import '../constants/endpoint.dart';
 import '../utils/app_utils.dart';
@@ -16,6 +16,7 @@ class UserRepository {
   final Dio _client;
   final GetStorage _local;
   final ApiService _apiService = getx.Get.find<ApiService>();
+  final IsarService _isarService = getx.Get.find<IsarService>();
 
   UserRepository({
     required Dio client,
@@ -62,7 +63,11 @@ class UserRepository {
         Endpoint.postSignOut,
         fromJsonT: (json) => json,
       );
-      await _local.remove(LocalDataKey.token);
+
+      [
+        _local.remove(LocalDataKey.token),
+        _isarService.logout(),
+      ].wait;
     } on BadResponse catch (e) {
       throw e.message ?? '';
     } catch (e) {

@@ -133,20 +133,46 @@ class ApiService {
   }
 
   dynamic parseError(DioException e) {
-    if (e.type == DioExceptionType.badResponse) {
-      BadResponse badResponse = BadResponse.fromJson(e.response?.data);
-      throw badResponse;
-    }
-    if (e.type == DioExceptionType.connectionTimeout) {
-      throw 'check your connection';
-    }
+    // Detailed error handling based on the type of DioException
+    switch (e.type) {
+      case DioExceptionType.badResponse:
+        // Assuming e.response?.data is in a JSON format that matches your BadResponse model
+        if (e.response?.data != null) {
+          try {
+            BadResponse badResponse = BadResponse.fromJson(e.response?.data);
+            return badResponse; // Return the BadResponse object
+          } catch (error) {
+            // If parsing fails, throw a generic error
+            throw 'Failed to parse error response';
+          }
+        } else {
+          throw 'Server responded with an error but no data was received';
+        }
 
-    if (e.type == DioExceptionType.receiveTimeout) {
-      throw 'unable to connect to the server';
-    }
+      case DioExceptionType.connectionTimeout:
+        throw 'Connection timed out. Please check your internet connection and try again.';
 
-    if (e.type == DioExceptionType.unknown) {
-      throw 'Something went wrong';
+      case DioExceptionType.connectionError:
+        // Provide a more descriptive error message if available, otherwise a generic one
+        throw e.message ?? 'Connection error occurred. Please try again.';
+
+      case DioExceptionType.receiveTimeout:
+        throw 'Failed to receive a response from the server in time. Please try again later.';
+
+      case DioExceptionType.sendTimeout:
+        throw 'Failed to send request to the server in time. Please check your connection and try again.';
+
+      case DioExceptionType.cancel:
+        throw 'Request to the server was cancelled. Please try again.';
+
+      case DioExceptionType.unknown:
+        if (e.message != null && e.message!.contains('SocketException')) {
+          throw 'No internet connection. Please check your network settings.';
+        }
+        throw 'An unknown error occurred. Please try again.';
+
+      default:
+        throw 'An unexpected error occurred. Please try again.';
     }
   }
 }

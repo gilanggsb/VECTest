@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'dart:async';
 import 'dart:io';
 
-import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -14,6 +14,13 @@ class IsarService {
 
   static List<CollectionSchema> get isarSchemas {
     return [ProductModelSchema];
+  }
+
+  // List db that sould be clear when user logout
+  Future<void> logout() async {
+    [
+      clearAll<ProductModel>(),
+    ].wait;
   }
 
   Future<void> init(List<CollectionSchema> schemas) async {
