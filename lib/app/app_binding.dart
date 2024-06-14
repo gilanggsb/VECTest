@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vec_gilang/src/models/models.dart';
 import 'package:vec_gilang/src/utils/api_service.dart';
+import 'package:vec_gilang/src/utils/isar_service.dart';
 import 'package:vec_gilang/src/utils/pretty_logger_interceptors.dart';
 
 import '../src/constants/endpoint.dart';
@@ -10,7 +11,7 @@ import '../src/utils/curl_logger_interceptors.dart';
 
 class AppBinding extends Bindings {
   @override
-  void dependencies() {
+  void dependencies() async {
     Get.put<GetStorage>(GetStorage());
 
     Get.put<Dio>(
@@ -41,10 +42,17 @@ class AppBinding extends Bindings {
         ]),
       permanent: true,
     );
+
     Get.put<ApiService>(
       ApiService(
         client: Get.find<Dio>(),
       ),
     );
+
+    await Get.putAsync(() async {
+      final isarService = IsarService();
+      await isarService.init(IsarService.isarSchemas);
+      return isarService;
+    });
   }
 }
