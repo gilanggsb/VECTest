@@ -111,7 +111,8 @@ class ProductListController extends GetxController {
     //TODO: finish this implementation by creating product detail page & calling it here
   }
 
-  void setFavorite(ProductModel product) {
+  void setFavorite(ProductModel product) async {
     product.isFavorite = !product.isFavorite;
+    await _productRepository.saveOrRemoveProductFromFavorite(product);
   }
 }

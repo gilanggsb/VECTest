@@ -1,11 +1,8 @@
 import '../product_model.dart';
 
 class ProductListResponseModel {
-  ProductListResponseModel({
-    required this.status,
-    required this.message,
-    required this.data
-  });
+  ProductListResponseModel(
+      {required this.status, required this.message, required this.data});
 
   final int status;
   final String message;
@@ -15,13 +12,25 @@ class ProductListResponseModel {
       ProductListResponseModel(
         status: json['status'],
         message: json['message'],
-        data: List<ProductModel>.from(json['data']
-            .map((x) => ProductModel.fromJson(x))),
+        data: List<ProductModel>.from(
+            json['data'].map((x) => ProductModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    'status': status,
-    'message': message,
-    'data': data,
-  };
+        'status': status,
+        'message': message,
+        'data': data,
+      };
+
+  ProductListResponseModel copyWith({
+    int? status,
+    String? message,
+    List<ProductModel>? data,
+  }) {
+    return ProductListResponseModel(
+      data: data ?? this.data,
+      message: message ?? this.message,
+      status: status ?? this.status,
+    );
+  }
 }
