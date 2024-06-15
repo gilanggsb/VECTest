@@ -57,7 +57,10 @@ class ProfileController extends GetxController {
   }
 
   onEditProfileClick() async {
-    Get.toNamed(RouteName.editProfile);
+    final isRefresh = await Get.toNamed(RouteName.editProfile);
+    print("isRefresh $isRefresh");
+    if (!isRefresh) return;
+    loadUserFromServer();
   }
 
   /*
@@ -94,7 +97,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  onOpenWebPageClick() {
+  onOpenWebPageClick() async {
     Get.toNamed(
       RouteName.webView,
       arguments:
@@ -105,7 +108,7 @@ class ProfileController extends GetxController {
   void doLogout() async {
     try {
       isLoading.value = true;
-      await Future.delayed(const Duration(seconds: 1));
+      // await Future.delayed(const Duration(seconds: 1));
       await _userRepository.logout();
       Get.offAllNamed(RouteName.login);
     } finally {

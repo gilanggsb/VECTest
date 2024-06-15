@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:vec_gilang/src/models/request/update_profile_request_model.dart';
 import 'package:vec_gilang/src/repositories/user_repository.dart';
 import 'package:vec_gilang/src/utils/string_ext.dart';
@@ -49,7 +50,6 @@ class EditProfileController extends GetxController {
 
   DateTime birthDate = DateTime.now();
 
-  Rx<File>? _profilePicture;
   RxBool isLoading = false.obs;
 
   @override
@@ -96,8 +96,11 @@ class EditProfileController extends GetxController {
     }
   }
 
-  void changeImage() async {
-    //TODO: Implement change profile image
+  void changeImage(ImageSource imageSource) async {
+    final pickedFile = await ImagePicker().pickImage(source: imageSource);
+    if (pickedFile == null) return;
+    _isLoadPictureFromPath.value = true;
+    _profilePictureUrlOrPath.value = pickedFile.path;
   }
 
   void onChangeGender(bool isFemale) {
@@ -128,7 +131,7 @@ class EditProfileController extends GetxController {
         height: etHeight.text,
         weight: etWeight.text,
         method: "PUT",
-        profilePicture: _profilePicture?.value,
+        profilePicture: File(profilePictureUrlOrPath),
       );
 
       await _userRepository.updateProfile(updatedUser);

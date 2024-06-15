@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vec_gilang/src/constants/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,12 @@ class EditProfilePage extends GetView<EditProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
+            leading: IconButton(
+              onPressed: () => Get.back(result: true),
+              icon: const Icon(
+                Icons.chevron_left,
+              ),
+            ),
             backgroundColor: white,
             elevation: 0,
           ),
@@ -44,7 +51,45 @@ class EditProfilePage extends GetView<EditProfileController> {
                   const SizedBox(height: 24),
                   InkWell(
                     onTap: () {
-                      controller.changeImage();
+                      Get.bottomSheet(
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              topLeft: Radius.circular(12),
+                            ),
+                            color: white,
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              imagePickerButton(
+                                'Gallery',
+                                Icons.image,
+                                () {
+                                  Get.back();
+                                  controller.changeImage(ImageSource.gallery);
+                                },
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              imagePickerButton(
+                                'Camera',
+                                Icons.camera,
+                                () {
+                                  Get.back();
+                                  controller.changeImage(ImageSource.camera);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        enableDrag: false,
+                      );
                     },
                     child: SizedBox(
                       width: 100,
@@ -562,6 +607,42 @@ class EditProfilePage extends GetView<EditProfileController> {
           ),
         ),
       );
+
+  Widget imagePickerButton(String label, IconData icon, VoidCallback onClick) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero,
+        backgroundColor: white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        side: const BorderSide(width: 1.5, color: gray200),
+        fixedSize: const Size(400, 50),
+      ),
+      onPressed: onClick,
+      child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 24,
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: gray900,
+                ),
+              ),
+            ],
+          )),
+    );
+  }
 
   Widget outlinedButtonSwitch(String label, bool active, onClick) =>
       OutlinedButton(
