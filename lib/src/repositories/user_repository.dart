@@ -119,7 +119,6 @@ class UserRepository {
   Future<dynamic> updateProfile(UpdateProfileRequestModel model) async {
     try {
       final formData = await AppUtils.createFormData(model.toMap());
-      print("cek update ${model.toMap()}");
       final response = await _apiService.uploadFormData(
         Endpoint.postUpdateProfile,
         formData: formData,

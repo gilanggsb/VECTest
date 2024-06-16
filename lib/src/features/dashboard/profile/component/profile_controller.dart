@@ -58,7 +58,6 @@ class ProfileController extends GetxController {
 
   onEditProfileClick() async {
     final isRefresh = await Get.toNamed(RouteName.editProfile);
-    print("isRefresh $isRefresh");
     if (!isRefresh) return;
     loadUserFromServer();
   }

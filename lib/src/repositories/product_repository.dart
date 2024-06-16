@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:vec_gilang/src/utils/api_service.dart';
 import 'package:vec_gilang/src/utils/isar_service.dart';
 
 import '../constants/endpoint.dart';
@@ -13,6 +14,7 @@ class ProductRepository {
   final Dio _client;
   final GetStorage _local;
   final IsarService _isarService;
+  final ApiService _apiService = Get.find<ApiService>();
 
   ProductRepository(
       {required Dio client,
@@ -61,6 +63,35 @@ class ProductRepository {
     }
   }
 
+  Future<ProductModel?> getProductDetail(String id) async {
+    try {
+      final response = await _apiService.get(
+        Endpoint.getProductDetail(id),
+        fromJsonT: (json) => ProductModel.fromJson(json),
+      );
+      return response.data;
+    } catch (e) {
+      debugPrint("getProductDetail error $e");
+      rethrow;
+    }
+  }
+
+  Future<List<ProductRating>?> getProductRatings(
+      ProductRatingRequest model) async {
+    try {
+      final response = await _apiService.get(
+        Endpoint.getProductRatings,
+        queryParams: model.toJson(),
+        fromJsonT: (json) => List<ProductRating>.from(
+            (json as List).map((element) => ProductRating.fromJson(element))),
+      );
+      return response.data;
+    } catch (e) {
+      debugPrint("getProductRatings error $e");
+      rethrow;
+    }
+  }
+
   Future<ProductListResponseModel> syncProductWithFavorite(
       ProductListResponseModel productResponse) async {
     final favoriteProducts = await getFavoriteProducts();
@@ -77,7 +108,6 @@ class ProductRepository {
       return product;
     }).toList();
 
-    // mappedProducts.map((element) => print("cek element ${element.toJson()}"));
     return productResponse.copyWith(data: mappedProducts);
   }
 }

@@ -13,3 +13,4 @@ const red500 = Color(0xffFF3B3B);
 const red600 = Color(0xffE83636);
 const green50 = Color(0xffE6F9F1);
 const green600 = Color(0xff06C270);
+const yellow500 = Color(0xFFFFCC00);
