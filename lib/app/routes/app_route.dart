@@ -7,6 +7,7 @@ import 'package:vec_gilang/src/features/dashboard/webview/component/webview_bind
 import 'package:vec_gilang/src/features/dashboard/webview/webview_page.dart';
 import 'package:vec_gilang/src/features/splash/splash_page.dart';
 
+import '../../src/features/dashboard/products/detail/detail.dart';
 import '../../src/features/dashboard/profile/edit/component/edit_profile_binding.dart';
 import '../../src/features/login/component/login_binding.dart';
 import '../../src/features/login/login_page.dart';
@@ -38,6 +39,11 @@ class AppRoute {
       name: RouteName.webView,
       page: () => const WebviewPage(),
       binding: WebviewBinding(),
+    ),
+    GetPage(
+      name: RouteName.productDetail,
+      page: () => const ProductDetailPage(),
+      binding: ProductDetailBinding(),
     ),
   ];
 }

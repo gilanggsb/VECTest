@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vec_gilang/app/routes/route_name.dart';
 
 import '../../../../../models/product_model.dart';
 import '../../../../../models/request/product_list_request_model.dart';
@@ -117,7 +118,7 @@ class ProductListController extends GetxController {
   }
 
   void toProductDetail(ProductModel product) async {
-    //TODO: finish this implementation by creating product detail page & calling it here
+    Get.toNamed(RouteName.productDetail, arguments: product.id);
   }
 
   void setFavorite(ProductModel product) async {
