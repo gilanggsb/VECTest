@@ -16,6 +16,10 @@ class SplashController extends GetxController {
 
   void checkUser() async {
     await Future.delayed(const Duration(seconds: 3));
+
+    bool? isBoarded = _storage.read(LocalDataKey.onboarded);
+    if (isBoarded == null) return Get.offNamed(RouteName.onboarding);
+
     String? token = _storage.read(LocalDataKey.token);
     if (token == null) return Get.offNamed(RouteName.login);
     Get.offNamed(RouteName.dashboard);
