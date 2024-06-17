@@ -15,6 +15,7 @@ class ProductDetailController extends GetxController {
 
   final ProductRepository _productRepository;
   String productId = Get.arguments;
+  // String productId = "995a435d-f2ef-436f-90ed-f65a5260ee52";
 
   late Rx<ProductRatingRequest> _productRatingsRequest;
   ProductRatingRequest get productRatingRequest => _productRatingsRequest.value;
@@ -42,8 +43,10 @@ class ProductDetailController extends GetxController {
     ).obs;
     try {
       final results = await ([
-        _productRepository.getProductDetail(productId),
-        _productRepository.getProductRatings(productRatingRequest),
+        _productRepository.getProductDetail(productId).catchError(handleError),
+        _productRepository
+            .getProductRatings(productRatingRequest)
+            .catchError(handleError),
       ]).wait;
 
       final product = results[0] as ProductModel?;
@@ -61,5 +64,14 @@ class ProductDetailController extends GetxController {
     } finally {
       _isLoading.value = false;
     }
+  }
+
+  handleError(dynamic e) {
+    if (e is BadResponse) {
+      SnackbarWidget.showFailedSnackbar(e.message ?? '');
+    } else {
+      SnackbarWidget.showFailedSnackbar(e.toString());
+    }
+    return;
   }
 }

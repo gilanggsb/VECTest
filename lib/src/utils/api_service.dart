@@ -140,7 +140,9 @@ class ApiService {
         if (e.response?.data != null) {
           try {
             BadResponse badResponse = BadResponse.fromJson(e.response?.data);
-            return badResponse; // Return the BadResponse object
+            throw badResponse; // Return the BadResponse object
+          } on BadResponse catch (_) {
+            rethrow; // Return the BadResponse object
           } catch (error) {
             // If parsing fails, throw a generic error
             throw 'Failed to parse error response';

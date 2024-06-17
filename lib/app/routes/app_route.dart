@@ -5,6 +5,8 @@ import 'package:vec_gilang/src/features/dashboard/profile/edit/edit_profile_page
 import 'package:get/get.dart';
 import 'package:vec_gilang/src/features/dashboard/webview/component/webview_binding.dart';
 import 'package:vec_gilang/src/features/dashboard/webview/webview_page.dart';
+import 'package:vec_gilang/src/features/onboarding/component/onboarding_binding.dart';
+import 'package:vec_gilang/src/features/onboarding/onboarding_page.dart';
 import 'package:vec_gilang/src/features/splash/splash_page.dart';
 
 import '../../src/features/dashboard/products/detail/detail.dart';
@@ -44,6 +46,11 @@ class AppRoute {
       name: RouteName.productDetail,
       page: () => const ProductDetailPage(),
       binding: ProductDetailBinding(),
+    ),
+    GetPage(
+      name: RouteName.onboarding,
+      page: () => const OnBoardingPage(),
+      binding: OnBoardingBinding(),
     ),
   ];
 }

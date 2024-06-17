@@ -49,7 +49,7 @@ class ProductInformation extends StatelessWidget {
                   width: 2,
                 ),
                 Text(
-                  "${controller.product?.ratingAverage}",
+                  controller.product?.ratingAverage ?? "-",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -59,7 +59,7 @@ class ProductInformation extends StatelessWidget {
                   width: 2,
                 ),
                 Text(
-                  "(${controller.product?.reviewCount} Review)",
+                  "(${controller.product?.reviewCount ?? "-"} Review)",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
